@@ -3,13 +3,13 @@ from coefficient_design import Coefficient_design
 
 
 class Coefficient(QWidget, Coefficient_design):
-    def __init__(self, args):
+    def __init__(self, arg, s):
         super().__init__()
         self.setupUi(self)
-        self.label.setText(args)
-        self.intiUi()
+        self.label.setText(arg)
+        self.initUi()
 
-    def intiUi(self):
+    def initUi(self):
         self.pushButton.clicked.connect(self.doo)
 
     def doo(self):

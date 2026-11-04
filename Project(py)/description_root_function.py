@@ -1,29 +1,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import Qt
 from description_root_function_design import Description_root_function_design
 
 
 class Description_root_function(QWidget, Description_root_function_design):
-    def __init__(self, args):
+    def __init__(self, k, b):
         super().__init__()
         self.move(515, 540)
-        if args[0] == '1':
+        if k == '1':
             self.k_label = ''
             self.k = '1'
-        elif args[0] == '-1':
+        elif k == '-1':
             self.k_label = '-'
             self.k = '-1'
         else:
-            self.k_label = args[0]
+            self.k_label = k
             self.k = self.k_label
-        self.b = args[1]
+        self.b = b
         self.setupUi(self)
         self.initUi()
 
     def initUi(self):
         self.pushButton.clicked.connect(self.doo)
         k, b = float(self.k), float(self.b)
+        plt.close('all')
         if k and b:
             if b > 0:
                 self.label.setText(f'y = √{self.k_label}x + {self.b}; линейная функция, графиком является прямая')
@@ -35,20 +37,16 @@ class Description_root_function(QWidget, Description_root_function_design):
             self.label.setText(f'y = √{self.b}; линейная функция, графиком является прямая')
         if k > 0:
             self.label_3.setText(f'f(x) ↗ возрастает')
-            if self.b == '0':
+            if not b:
                 x_0 = 0
                 self.label_2.setText(f'D(f) x = ({round(x_0, 2)};+∞);E(f) y = (0;+∞)')
             else:
-                x_0 = -float(self.b) / k
+                x_0 = -b / k
                 self.label_2.setText(f'D(f) x = ({round(x_0, 2)};+∞);E(f) y = (0;+∞)')
         elif k < 0:
             self.label_3.setText(f'f(x) ↘ убывает')
-            if b == 0:
-                x_0 = 0
-                self.label_2.setText(f'D(f) x = (-∞;{round(x_0, 2)});E(f) y = (0;+∞)')
-            else:
-                x_0 = -float(self.b) / k
-                self.label_2.setText(f'D(f) x = (-∞;{round(x_0, 2)});E(f) y = (0;+∞)')
+            x_0 = -b / k
+            self.label_2.setText(f'D(f) x = (-{b};{round(x_0, 2)});E(f) y = (0;{round(((k * (-b) + b) ** 0.5), 2)})')
         else:
             self.label_3.setText(f'f(x) параллельно оси Ox')
             if b:
@@ -70,11 +68,11 @@ class Description_root_function(QWidget, Description_root_function_design):
                 x_0 = 0
             else:
                 x_0 = -float(self.b) / k
-            self.label_5.setText(f'Нули функции y = 0 при x = {round(x_0, 2)}, ({round(x_0, 2)};0)')
+            self.label_5.setText(f'y = 0 при x = {round(x_0, 2)}; ({round(x_0, 2)};0)')
             if k > 0:
                 x = np.linspace(x_0, 20, 10000)
             else:
-                x = np.linspace(-20, x_0, 10000)
+                x = np.linspace(-b, x_0, 10000)
         fig, ax = plt.subplots()
         fig.set_size_inches(2, 2)
         ax.set_ylim(-20, 20)
@@ -89,7 +87,7 @@ class Description_root_function(QWidget, Description_root_function_design):
         plt.title('График', fontsize=14)
         fig.canvas.manager.window.move(515, 75)
         ax.plot(x, y)
-        plt.show()
+        plt.show(block=False)
 
     def doo(self):
         plt.close()

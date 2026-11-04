@@ -1,22 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import Qt
 from description_fraction_function_design import Description_fraction_function_design
 
 
 class Description_fraction_function(QWidget, Description_fraction_function_design):
-    def __init__(self, args):
+    def __init__(self, k, b):
         super().__init__()
         self.move(515, 540)
-        self.k_label = args[0]
+        self.k_label = k
         self.k = self.k_label
-        self.b = args[1]
+        self.b = b
         self.setupUi(self)
         self.initUi()
 
     def initUi(self):
         self.pushButton.clicked.connect(self.doo)
         k, b = float(self.k), float(self.b)
+        plt.close('all')
         if k and b:
             if b > 0:
                 self.label.setText(f'y = {self.k_label}/x + {self.b}; дробная функция, графиком является гипербола')
@@ -74,7 +76,7 @@ class Description_fraction_function(QWidget, Description_fraction_function_desig
         plt.title('График и асимптоты', fontsize=14)
         fig.canvas.manager.window.move(515, 75)
         ax.plot(x, y)
-        plt.show()
+        plt.show(block=False)
 
     def doo(self):
         plt.close()

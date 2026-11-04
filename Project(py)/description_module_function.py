@@ -1,29 +1,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import Qt
 from description_module_function_design import Description_module_function_design
 
 
 class Description_module_function(QWidget, Description_module_function_design):
-    def __init__(self, args):
+    def __init__(self, k, b):
         super().__init__()
         self.move(515, 540)
-        if args[0] == '1':
+        if k == '1':
             self.k_label = ''
             self.k = '1'
-        elif args[0] == '-1':
+        elif k == '-1':
             self.k_label = '-'
             self.k = '-1'
         else:
-            self.k_label = args[0]
+            self.k_label = k
             self.k = self.k_label
-        self.b = args[1]
+        self.b = b
         self.setupUi(self)
         self.initUi()
 
     def initUi(self):
         self.pushButton.clicked.connect(self.doo)
         k, b = float(self.k), float(self.b)
+        plt.close('all')
         if k and b:
             if b > 0:
                 self.label.setText(f'y = |{self.k_label}x + {self.b}|; линейная функция, графиком является прямая')
@@ -67,7 +69,7 @@ class Description_module_function(QWidget, Description_module_function_design):
         plt.title('График', fontsize=14)
         fig.canvas.manager.window.move(515, 75)
         ax.plot(x, y)
-        plt.show()
+        plt.show(block=False)
 
     def doo(self):
         plt.close()
